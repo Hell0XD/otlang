@@ -1,0 +1,76 @@
+mod main
+
+(defn range
+	[from to] (range from (- to 1) (pair to !))
+	[from 0 p] p
+	[from to p] (range from (- to 1) (pair to p))
+)
+
+(defn newCell
+	[1 1 1] 0
+	[1 1 0] 1
+	[1 0 1] 1
+	[1 0 0] 0
+	[0 1 1] 1
+	[0 1 0] 1
+	[0 0 1] 1
+	[0 0 0] 0
+)
+
+
+(defn continue [] :continue)
+
+(def input (new 20))
+(set input 0 0)
+(set input 1 0)
+(set input 2 0)
+(set input 3 0)
+(set input 4 0)
+(set input 5 0)
+(set input 6 0)
+(set input 7 0)
+(set input 8 0)
+(set input 9 0)
+(set input 10 0)
+(set input 11 0)
+(set input 12 0)
+(set input 13 0)
+(set input 14 0)
+(set input 15 0)
+(set input 16 0)
+(set input 17 0)
+(set input 18 0)
+(set input 19 0)
+
+(defn oneOneZero [input] (do
+	(def length (- (len input) 2)) # get lenght of the input - 2
+	(def output (new (+ length 2))) # define the output 
+
+	(set output 0 0) # set starting cell
+	(set output (+ 1 length) (newCell (get input length) (get input (+ 1 length)) 1)) # set ending cell
+
+	(print (get input 0))
+	(print " ")
+
+	(enumerate (lambda [i] (if (= i length) ! (do
+		(print (get input i))
+		(print " ")
+
+		# set next output cell using 3 cells from input
+		(set output (+ 1 i) (newCell (get input i) (get input (+ 1 i)) (get input (+ 2 i))))
+		(continue) # continue the enumerating
+	))))
+	(print (get input (+ 1 length)))
+	(print "\n")
+
+	(oneOneZero output)
+))
+
+
+(oneOneZero input)
+
+
+
+
+
+

@@ -1,0 +1,41 @@
+mod main
+
+
+(def arr (new 6))
+(set arr 0 1)
+(set arr 1 4)
+(set arr 2 2)
+(set arr 3 5)
+(set arr 4 -2)
+(set arr 5 3)
+
+
+(defn println [x] (do (print x) (print "\n")))
+
+(defn for 
+	[cond body] (for cond body 0)
+	[cond body i] (if (cond i) (do (body i) (for cond body (+ i 1))) !)
+)
+
+(defn bubleSort 
+	[arr] (bubleSort arr (len arr))
+	[arr n] (if (= n 1) arr (do
+		(for (lambda [i] (< i (- n 1))) (lambda [i] (if (> (get arr i) (get arr (+ i 1))) (do 
+			(def tmp (get arr i))
+			(set arr i (get arr (+ i 1)))
+			(set arr (+ i 1) tmp)
+		) !)))
+		(bubleSort arr (- n 1))
+	))
+)
+
+(println arr)
+(bubleSort arr)
+(println arr)
+
+
+
+
+
+
+

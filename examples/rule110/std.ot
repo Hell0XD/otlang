@@ -1,0 +1,26 @@
+mod std
+
+
+
+(defn while [f] (if (= (f) !) ! (while f)))
+
+(defn enumerate 
+	[f] (enumerate f 0)
+	[f index] (if (= (f index) !) ! (enumerate f (+ 1 index)))
+)
+
+(defn foreach
+    [f !] !
+    [f p] (do
+        (f (left p))
+        (foreach f (right p))
+    )
+)
+
+
+(defn println
+    [x] (do
+        (print x)
+        (print "\n")
+    )
+)

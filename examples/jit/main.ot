@@ -1,0 +1,12 @@
+mod main
+
+
+(defn sum [x y] (+ x y))
+
+(sum 1 1)
+(sum 1 1)
+(sum 1 1)
+(sum 1 1)
+(sum 1 1)
+(sum 6 4)
+(print (sum 6 4))

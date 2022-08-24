@@ -1,0 +1,7 @@
+mod test
+
+
+(import "./math.dll" 
+    (defn sum [int int] int)
+)
+

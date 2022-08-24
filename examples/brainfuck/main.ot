@@ -1,0 +1,106 @@
+mod main
+
+(load)
+
+
+(defn newline [] (print "\n"))
+
+# splits string into array of chars
+(defn chars 
+	[s] (chars s (new (strlen s)) 0)
+	[s arr i] (if (= (strlen s) 0) arr (do
+		(set arr i (takeChar s))
+		(chars (cut s 1) arr (+ 1 i))
+	))
+)
+
+# creates zero array with given size
+(defn newZero 
+	[size] (newZero size (new size))
+	[0 arr] (set arr 0 0)
+	[size arr] (newZero (- size 1) (set arr (- size 1) 0))
+)
+
+# finds index of matching closing bracket
+(defn findBracket
+	[arr offset] (findBracket arr offset 0)
+	[arr offset depth] (if (= ']' (get arr offset))
+		(if (< depth 1)
+			(+ 1 offset)
+			(findBracket arr (+ 1 offset) (- depth 1))
+		)
+		(if (= '[' (get arr offset))
+			(findBracket arr (+ 1 offset) (+ 1 depth))
+			(findBracket arr (+ 1 offset) depth)
+		)
+	)
+)
+
+# finds index of matching openning bracket
+(defn findOtherBracket
+	[arr offset] (findOtherBracket arr offset 0)
+	[arr offset depth] (if (= '[' (get arr offset))
+		(if (< depth 1)
+			offset
+			(findOtherBracket arr (- offset 1) (- depth 1))
+		)
+		(if (= ']' (get arr offset))
+			(findOtherBracket arr (- offset 1) (+ 1 depth))
+			(findOtherBracket arr (- offset 1) depth)
+		)
+	)
+)
+
+(defn brainfuck 
+	[code] (brainfuck code (newZero 10) 0 0 (get code 0))	
+	[code memory cp sp !] !
+
+	[code memory cp sp '>'] 
+		(brainfuck code memory (+ 1 cp) (+ 1 sp) (get code (+ 1 cp)))
+	[code memory cp sp '<']
+		(brainfuck code memory (+ 1 cp) (- sp 1) (get code (+ 1 cp)))
+	[code memory cp sp '+'] 
+		(brainfuck 
+			code 
+			(set memory sp (+ 1 (get memory sp))) 
+			(+ 1 cp) 
+			sp 
+			(get code (+ 1 cp))
+		)
+	[code memory cp sp '-'] 
+		(brainfuck 
+			code 
+			(set memory sp (- (get memory sp) 1)) 
+			(+ 1 cp)
+			sp 
+			(get code (+ 1 cp))
+		)
+	[code memory cp sp '.'] (do
+		(print (charToString (get memory sp)))
+		(brainfuck code memory (+ 1 cp) sp (get code (+ 1 cp)))
+	)
+	[code memory cp sp '['] (if (= 0 (get memory sp)) 
+		(do 
+			(def newPointer (findBracket code (+ 1 cp)))
+			(brainfuck code memory newPointer sp (get code newPointer))
+		)
+		(brainfuck code memory (+ 1 cp) sp (get code (+ 1 cp)))
+	)
+	[code memory cp sp ']'] (if (= 0 (get memory sp))
+		(brainfuck code memory (+ 1 cp) sp (get code (+ 1 cp)))
+		(do
+			(def newPointer (findOtherBracket code (- cp 1)))
+			(brainfuck code memory newPointer sp (get code newPointer))
+		)
+	)
+
+	[code memory cp sp unu] (do
+		(print "Unknown char")
+		(newline)
+	)
+)
+
+(def helloWorld "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.")
+
+(brainfuck (chars helloWorld))
+

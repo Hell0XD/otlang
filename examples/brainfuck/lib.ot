@@ -1,0 +1,15 @@
+mod lib
+
+(defn load [] (do
+	(import "./liblib.so"
+		(defn string [] str)
+		(defn trim [str] str)
+		(defn takeChar [str] int)
+		(defn cut [str int] str)
+		(defn charToString [int] str)
+	)
+))
+
+(defn cut [string index] (!cut string index))
+(defn takeChar [string] (!takeChar string))
+(defn charToString [char] (!charToString char))
